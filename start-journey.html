@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recovery Navigator - Start Journey</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 400px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00D4AA, #0066FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        
+        .subtitle {
+            color: #888;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+        
+        .start-button {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #00D4AA, #0066FF);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .start-button:hover {
+            transform: translateY(-5px);
+        }
+        
+        .features {
+            margin-top: 40px;
+            display: grid;
+            gap: 15px;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🏃♂️</div>
+        <h1 class="title">Recovery Navigator</h1>
+        <p class="subtitle">AI-Powered Fitness Recovery Companion</p>
+        
+        <button class="start-button" onclick="startJourney()">
+            Start Your Recovery Journey →
+        </button>
+        
+        <div class="features">
+            <div class="feature">
+                <strong>🎯 3D Recovery Dial</strong><br>
+                Interactive visualization of your recovery status
+            </div>
+            <div class="feature" onclick="openAIAssistant()" style="cursor: pointer; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <strong>🤖 AI Health Assistant</strong><br>
+                Chat with Dr. Alexandra Chen for personalized guidance
+            </div>
+            <div class="feature">
+                <strong>🏆 Achievement System</strong><br>
+                Gamified progress tracking and motivation
+            </div>
+        </div>
+        
+        <div style="margin-top: 30px; text-align: center;">
+            <button onclick="openAdmin()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 8px; color: #888; cursor: pointer; font-size: 0.9rem;">Admin Access</button>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        if (!localStorage.getItem('userEmail')) {
+            window.location.href = 'login.html';
+        }
+        
+        function startJourney() {
+            window.location.href = 'simple-demo.html';
+        }
+        
+        function openAIAssistant() {
+            window.location.href = 'ai-assistant.html';
+        }
+        
+        function openAdmin() {
+            const password = prompt('Enter admin password:');
+            if (password === 'admin123') {
+                window.location.href = 'admin.html';
+            } else if (password !== null) {
+                alert('Invalid password!');
+            }
+        }
+    </script>
+</body>
+</html>

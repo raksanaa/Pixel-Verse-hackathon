@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recovery Navigator - AI Fitness Recovery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0e4b99 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+            color: #FFFFFF;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .title {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00D4AA 0%, #0066FF 50%, #9B59B6 100%);
+            background-size: 200% 200%;
+            animation: titleGlow 4s ease infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes titleGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #A0A0A0;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .recovery-dial-container {
+            background: linear-gradient(145deg, rgba(15, 15, 35, 0.95), rgba(26, 26, 46, 0.9));
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            border: 2px solid rgba(0, 212, 170, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 212, 170, 0.2);
+        }
+
+        .dial {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 1rem;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .dial:hover {
+            transform: scale(1.05);
+        }
+
+        .dial svg {
+            transform: rotate(-90deg);
+        }
+
+        .dial-score {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: 700;
+            color: #00D4AA;
+        }
+
+        .voice-coach {
+            background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6));
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            border: 1px solid rgba(0, 212, 170, 0.4);
+        }
+
+        .coach-avatar {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .voice-btn {
+            background: linear-gradient(135deg, #00D4AA 0%, #0066FF 100%);
+            border: none;
+            border-radius: 50%;
+            width: 90px;
+            height: 90px;
+            font-size: 2.2rem;
+            color: white;
+            cursor: pointer;
+            margin: 1rem auto;
+            display: block;
+            transition: all 0.4s ease;
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, #00D4AA 0%, #0066FF 50%, #9B59B6 100%);
+            border-radius: 24px;
+            padding: 2.5rem;
+            color: white;
+            margin: 2rem 0;
+        }
+
+        .factors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .factor-card {
+            background: linear-gradient(145deg, rgba(26, 26, 46, 0.7), rgba(22, 33, 62, 0.5));
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 1.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.4s ease;
+        }
+
+        .factor-card:hover {
+            transform: translateY(-5px);
+            border-color: #00D4AA;
+        }
+
+        .factor-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .factor-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+
+        .factor-score {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-left: auto;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 2s ease;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #00D4AA 0%, #0066FF 100%);
+            border: none;
+            border-radius: 16px;
+            padding: 1.2rem 2.5rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .factors-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">💪</div>
+            <h1 class="title">Recovery Navigator</h1>
+            <p class="subtitle">AI-Powered Fitness Recovery Companion</p>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div class="dashboard">
+            <!-- Recovery Dial -->
+            <div class="recovery-dial-container">
+                <h3>Recovery Score</h3>
+                <div class="dial" onclick="animateDial()">
+                    <svg width="200" height="200">
+                        <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="20"/>
+                        <circle id="progress-circle" cx="100" cy="100" r="90" fill="none" stroke="#00D4AA" stroke-width="20" 
+                                stroke-dasharray="0 565" stroke-linecap="round"/>
+                    </svg>
+                    <div class="dial-score" id="score">75</div>
+                </div>
+                <p>Moderate Training Recommended</p>
+            </div>
+
+            <!-- Voice Coach -->
+            <div class="voice-coach">
+                <div class="coach-avatar">🤖</div>
+                <h3>AI Recovery Coach</h3>
+                <p>Ask me anything about your recovery!</p>
+                <button class="voice-btn" onclick="activateVoice()">🎤</button>
+                <div id="coach-response" style="margin-top: 1rem; font-style: italic; color: #A0A0A0;"></div>
+            </div>
+        </div>
+
+        <!-- Recommendation Card -->
+        <div class="recommendation">
+            <h2>🏃♂️ Moderate Training Day</h2>
+            <p>Your recovery metrics indicate you're ready for a balanced workout. Focus on strength training with moderate intensity.</p>
+            <button class="btn" onclick="showWorkout()">Start Workout</button>
+            <button class="btn" onclick="showTips()">Get Tips</button>
+            <button class="btn" onclick="syncHealthData()">📱 Sync Health Data</button>
+            <button class="btn" onclick="openMusicTherapy()">🎵 Music Therapy</button>
+            <button class="btn" onclick="openStressGames()">🎮 Stress Relief Games</button>
+            <button class="btn" onclick="showMotivationalChat()">💬 Motivational Support</button>
+            <button class="btn" onclick="openAIChat()">🤖 AI Health Assistant</button>
+        </div>
+
+        <!-- Recovery Factors -->
+        <div class="factors-grid">
+            <div class="factor-card">
+                <div class="factor-header">
+                    <span class="factor-icon">😴</span>
+                    <div>
+                        <h4>Sleep Quality</h4>
+                        <p>Deep sleep recovery</p>
+                    </div>
+                    <span class="factor-score" style="color: #00D4AA;">85</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 85%; background: #00D4AA;"></div>
+                </div>
+            </div>
+
+            <div class="factor-card">
+                <div class="factor-header">
+                    <span class="factor-icon">❤️</span>
+                    <div>
+                        <h4>Heart Rate Variability</h4>
+                        <p>Autonomic balance</p>
+                    </div>
+                    <span class="factor-score" style="color: #FFB800;">70</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 70%; background: #FFB800;"></div>
+                </div>
+            </div>
+
+            <div class="factor-card">
+                <div class="factor-header">
+                    <span class="factor-icon">💪</span>
+                    <div>
+                        <h4>Muscle Strain</h4>
+                        <p>Recovery needed</p>
+                    </div>
+                    <span class="factor-score" style="color: #FF6B35;">60</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 60%; background: #FF6B35;"></div>
+                </div>
+            </div>
+
+            <div class="factor-card">
+                <div class="factor-header">
+                    <span class="factor-icon">🧠</span>
+                    <div>
+                        <h4>Stress Level</h4>
+                        <p>Mental wellness</p>
+                    </div>
+                    <span class="factor-score" style="color: #00D4AA;">80</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 80%; background: #00D4AA;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements -->
+        <div style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); backdrop-filter: blur(20px); border-radius: 24px; padding: 2.5rem; margin: 2rem 0; border: 1px solid rgba(255, 255, 255, 0.15);">
+            <h2 style="color: #00D4AA; font-size: 2rem; margin-bottom: 2rem;">🏆 Achievements</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                <div style="background: linear-gradient(145deg, rgba(15, 15, 35, 0.95), rgba(26, 26, 46, 0.9)); backdrop-filter: blur(15px); border-radius: 20px; padding: 1.5rem; text-align: center; border: 2px solid #00D4AA; transition: all 0.4s ease;" onmouseover="this.style.transform='translateY(-5px) scale(1.05)';" onmouseout="this.style.transform='translateY(0) scale(1)';">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌅</div>
+                    <h4 style="color: #fff; margin-bottom: 0.5rem;">Early Bird</h4>
+                    <p style="color: #A0A0A0; font-size: 0.9rem;">7-day morning streak</p>
+                </div>
+                <div style="background: linear-gradient(145deg, rgba(15, 15, 35, 0.95), rgba(26, 26, 46, 0.9)); backdrop-filter: blur(15px); border-radius: 20px; padding: 1.5rem; text-align: center; border: 2px solid #00D4AA; transition: all 0.4s ease;" onmouseover="this.style.transform='translateY(-5px) scale(1.05)';" onmouseout="this.style.transform='translateY(0) scale(1)';">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">👑</div>
+                    <h4 style="color: #fff; margin-bottom: 0.5rem;">Consistency King</h4>
+                    <p style="color: #A0A0A0; font-size: 0.9rem;">30-day workout streak</p>
+                </div>
+                <div style="background: linear-gradient(145deg, rgba(15, 15, 35, 0.95), rgba(26, 26, 46, 0.9)); backdrop-filter: blur(15px); border-radius: 20px; padding: 1.5rem; text-align: center; border: 2px solid #00D4AA; transition: all 0.4s ease;" onmouseover="this.style.transform='translateY(-5px) scale(1.05)';" onmouseout="this.style.transform='translateY(0) scale(1)';">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🧘♂️</div>
+                    <h4 style="color: #fff; margin-bottom: 0.5rem;">Recovery Master</h4>
+                    <p style="color: #A0A0A0; font-size: 0.9rem;">5 days of 90+ scores</p>
+                </div>
+                <div style="background: linear-gradient(145deg, rgba(15, 15, 35, 0.95), rgba(26, 26, 46, 0.9)); backdrop-filter: blur(15px); border-radius: 20px; padding: 1.5rem; text-align: center; border: 2px solid #00D4AA; transition: all 0.4s ease;" onmouseover="this.style.transform='translateY(-5px) scale(1.05)';" onmouseout="this.style.transform='translateY(0) scale(1)';">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">💪</div>
+                    <h4 style="color: #fff; margin-bottom: 0.5rem;">Iron Will</h4>
+                    <p style="color: #A0A0A0; font-size: 0.9rem;">Trained despite fatigue</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Demo -->
+        <div style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); backdrop-filter: blur(20px); border-radius: 24px; padding: 2.5rem; margin: 2rem 0; border: 1px solid rgba(255, 255, 255, 0.15);">
+            <h2 style="color: #00D4AA; font-size: 2rem; margin-bottom: 1rem;">Interactive Demo</h2>
+            <p style="color: #A0A0A0; margin-bottom: 2rem;">Experience the key features of Recovery Navigator:</p>
+            <button class="btn" onclick="simulateDataUpdate()">🔄 Simulate Real-time Data</button>
+            <button class="btn" onclick="showInsights()">🤖 AI Insights</button>
+            <button class="btn" onclick="unlockAchievement()">🏆 Unlock Achievement</button>
+            <button class="btn" onclick="showMuscleMap()">🗺️ Muscle Recovery Map</button>
+        </div>
+    </div>
+
+    <script>
+        let currentScore = 75;
+        
+        function animateDial() {
+            const circle = document.getElementById('progress-circle');
+            const scoreElement = document.getElementById('score');
+            const circumference = 2 * Math.PI * 90;
+            const offset = circumference - (currentScore / 100) * circumference;
+            
+            circle.style.strokeDasharray = `${circumference} ${circumference}`;
+            circle.style.strokeDashoffset = offset;
+            
+            // Animate score counting
+            let start = 0;
+            const increment = currentScore / 50;
+            const timer = setInterval(() => {
+                start += increment;
+                scoreElement.textContent = Math.floor(start);
+                if (start >= currentScore) {
+                    clearInterval(timer);
+                    scoreElement.textContent = currentScore;
+                }
+            }, 20);
+        }
+
+        function activateVoice() {
+            showMotivationalChat();
+        }
+
+        function showMotivationalChat() {
+            const chatModal = document.createElement('div');
+            chatModal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.8); display: flex; align-items: center;
+                justify-content: center; z-index: 1000; backdrop-filter: blur(10px);
+            `;
+            
+            chatModal.innerHTML = `
+                <div style="
+                    background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.9));
+                    backdrop-filter: blur(20px); border-radius: 24px; padding: 2rem;
+                    max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;
+                    border: 1px solid rgba(0, 212, 170, 0.3);
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="color: #00D4AA; margin: 0;">💬 Motivational Support</h2>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
+                    </div>
+                    
+                    <p style="color: #A0A0A0; margin-bottom: 2rem;">What's weighing on your mind today? Choose what you need support with:</p>
+                    
+                    <div style="display: grid; gap: 1rem;">
+                        <button onclick="showMotivation('work')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 1rem; border-radius: 12px; cursor: pointer;">💼 Work Stress</button>
+                        <button onclick="showMotivation('school')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 1rem; border-radius: 12px; cursor: pointer;">📚 School/College</button>
+                        <button onclick="showMotivation('relationship')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 1rem; border-radius: 12px; cursor: pointer;">💕 Relationships</button>
+                        <button onclick="showMotivation('financial')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 1rem; border-radius: 12px; cursor: pointer;">💰 Financial Worries</button>
+                        <button onclick="showMotivation('health')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 1rem; border-radius: 12px; cursor: pointer;">🏥 Health Anxiety</button>
+                        <button onclick="showMotivation('general')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 1rem; border-radius: 12px; cursor: pointer;">🌟 General Support</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(chatModal);
+        }
+
+        function showMotivation(category) {
+            const motivations = {
+                work: [
+                    "Remember: You're not just working, you're building your future. Every challenge today makes you stronger tomorrow. 💪",
+                    "Work stress is temporary, but your resilience is permanent. Take a deep breath - you've overcome difficult days before. 🌟"
+                ],
+                school: [
+                    "Education is a journey, not a race. Every mistake is a lesson, every challenge is growth. You're exactly where you need to be. 🎓",
+                    "Grades don't define your intelligence or worth. You're learning, growing, and becoming who you're meant to be. Keep going! 📚"
+                ],
+                relationship: [
+                    "Healthy relationships require work from both sides. Communicate openly, love deeply, and remember why you chose each other. 💕",
+                    "It's okay to disagree - it means you're both being authentic. What matters is how you handle the disagreement together. 🤝"
+                ],
+                financial: [
+                    "Money problems are temporary, but your resourcefulness is permanent. You've survived 100% of your difficult days so far. 💪",
+                    "Your worth isn't in your wallet. You are valuable beyond measure. Focus on what you can control today. 🌱"
+                ],
+                health: [
+                    "Your body is incredibly resilient. Trust it, listen to it, and give it the care it deserves. You're stronger than you know. 💪",
+                    "Health anxiety is real, but so is your body's ability to heal. Focus on what you can control: rest, nutrition, movement. 🌿"
+                ],
+                general: [
+                    "You are braver than you believe, stronger than you seem, and smarter than you think. This too shall pass. 🌟",
+                    "Life isn't about waiting for the storm to pass, it's about learning to dance in the rain. You're doing great! 🌈"
+                ]
+            };
+            
+            const messages = motivations[category];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.9); display: flex; align-items: center;
+                justify-content: center; z-index: 1001; backdrop-filter: blur(15px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.9));
+                    backdrop-filter: blur(20px); border-radius: 20px; padding: 2.5rem;
+                    text-align: center; color: white; max-width: 500px; width: 90%;
+                    border: 1px solid rgba(0, 212, 170, 0.3);
+                ">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🤗</div>
+                    <h2 style="color: #00D4AA; margin-bottom: 1.5rem;">You've Got This!</h2>
+                    <p style="color: #fff; line-height: 1.6; margin-bottom: 2rem; font-size: 1.1rem;">${randomMessage}</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button onclick="showMotivation('${category}')" style="
+                            background: linear-gradient(135deg, #00D4AA, #0066FF);
+                            border: none; border-radius: 12px; padding: 1rem 1.5rem;
+                            color: white; font-weight: 600; cursor: pointer;
+                        ">Another Message</button>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" style="
+                            background: transparent; border: 2px solid #fff;
+                            border-radius: 12px; padding: 1rem 1.5rem; color: white;
+                            cursor: pointer;
+                        ">Thank You</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function openMusicTherapy() {
+            const musicModal = document.createElement('div');
+            musicModal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.8); display: flex; align-items: center;
+                justify-content: center; z-index: 1000; backdrop-filter: blur(10px);
+            `;
+            
+            musicModal.innerHTML = `
+                <div style="
+                    background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.9));
+                    backdrop-filter: blur(20px); border-radius: 24px; padding: 2.5rem;
+                    max-width: 600px; width: 90%; max-height: 85vh; overflow-y: auto;
+                    border: 1px solid rgba(0, 212, 170, 0.3);
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="color: #00D4AA; font-size: 2rem; font-weight: 700; margin: 0;">
+                            🎵 Music Therapy Hub
+                        </h2>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
+                    </div>
+                    
+                    <!-- Spotify Integration -->
+                    <div style="background: rgba(30, 215, 96, 0.1); padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem; border: 1px solid rgba(30, 215, 96, 0.3);">
+                        <h3 style="color: #1ED760; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="#1ED760">
+                                <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/>
+                            </svg>
+                            Connect Spotify
+                        </h3>
+                        <p style="color: #A0A0A0; margin-bottom: 1rem;">Link your Spotify account to access personalized wellness playlists</p>
+                        <button onclick="connectSpotify()" style="
+                            background: linear-gradient(135deg, #1ED760 0%, #1DB954 100%);
+                            border: none; border-radius: 12px; padding: 1rem 2rem;
+                            color: white; font-size: 1rem; font-weight: 600; cursor: pointer;
+                            width: 100%; margin-bottom: 0.5rem;
+                        ">
+                            🔗 Connect to Spotify
+                        </button>
+                        <p style="color: #666; font-size: 0.8rem; text-align: center; margin: 0;">Secure OAuth 2.0 authentication</p>
+                    </div>
+                    
+                    <!-- Curated Playlists -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="color: #fff; margin-bottom: 1rem;">Wellness Playlists</h3>
+                        <div style="display: grid; gap: 1rem;">
+                            <div onclick="playPlaylist('stress-relief')" style="
+                                background: rgba(255, 107, 53, 0.1); border: 1px solid rgba(255, 107, 53, 0.3);
+                                border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.3s ease;
+                            " onmouseover="this.style.background='rgba(255, 107, 53, 0.2)'" onmouseout="this.style.background='rgba(255, 107, 53, 0.1)'">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="font-size: 2rem;">🧘</div>
+                                    <div>
+                                        <h4 style="color: #FF6B35; margin: 0;">Stress Relief & Meditation</h4>
+                                        <p style="color: #A0A0A0; margin: 0; font-size: 0.9rem;">Calming sounds, 432Hz frequencies, nature ambience</p>
+                                    </div>
+                                    <div style="margin-left: auto; color: #FF6B35;">▶️</div>
+                                </div>
+                            </div>
+                            
+                            <div onclick="playPlaylist('workout-energy')" style="
+                                background: rgba(0, 212, 170, 0.1); border: 1px solid rgba(0, 212, 170, 0.3);
+                                border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.3s ease;
+                            " onmouseover="this.style.background='rgba(0, 212, 170, 0.2)'" onmouseout="this.style.background='rgba(0, 212, 170, 0.1)'">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="font-size: 2rem;">💪</div>
+                                    <div>
+                                        <h4 style="color: #00D4AA; margin: 0;">Workout Energy Boost</h4>
+                                        <p style="color: #A0A0A0; margin: 0; font-size: 0.9rem;">High-energy tracks, motivational beats, pump-up music</p>
+                                    </div>
+                                    <div style="margin-left: auto; color: #00D4AA;">▶️</div>
+                                </div>
+                            </div>
+                            
+                            <div onclick="playPlaylist('sleep-sounds')" style="
+                                background: rgba(0, 102, 255, 0.1); border: 1px solid rgba(0, 102, 255, 0.3);
+                                border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.3s ease;
+                            " onmouseover="this.style.background='rgba(0, 102, 255, 0.2)'" onmouseout="this.style.background='rgba(0, 102, 255, 0.1)'">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="font-size: 2rem;">🌙</div>
+                                    <div>
+                                        <h4 style="color: #0066FF; margin: 0;">Sleep & Recovery Sounds</h4>
+                                        <p style="color: #A0A0A0; margin: 0; font-size: 0.9rem;">White noise, rain sounds, gentle melodies</p>
+                                    </div>
+                                    <div style="margin-left: auto; color: #0066FF;">▶️</div>
+                                </div>
+                            </div>
+                            
+                            <div onclick="playPlaylist('focus-flow')" style="
+                                background: rgba(155, 89, 182, 0.1); border: 1px solid rgba(155, 89, 182, 0.3);
+                                border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.3s ease;
+                            " onmouseover="this.style.background='rgba(155, 89, 182, 0.2)'" onmouseout="this.style.background='rgba(155, 89, 182, 0.1)'">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="font-size: 2rem;">🎯</div>
+                                    <div>
+                                        <h4 style="color: #9B59B6; margin: 0;">Focus & Flow State</h4>
+                                        <p style="color: #A0A0A0; margin: 0; font-size: 0.9rem;">Binaural beats, lo-fi, concentration music</p>
+                                    </div>
+                                    <div style="margin-left: auto; color: #9B59B6;">▶️</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Music Benefits -->
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 16px;">
+                        <h3 style="color: #fff; margin-bottom: 1rem;">Music Therapy Benefits</h3>
+                        <div style="display: grid; gap: 0.75rem; font-size: 0.9rem;">
+                            <div style="color: #A0A0A0;">• <span style="color: #00D4AA;">Reduces cortisol levels by up to 25%</span></div>
+                            <div style="color: #A0A0A0;">• <span style="color: #0066FF;">Improves workout performance by 15%</span></div>
+                            <div style="color: #A0A0A0;">• <span style="color: #FF6B35;">Enhances sleep quality and REM cycles</span></div>
+                            <div style="color: #A0A0A0;">• <span style="color: #9B59B6;">Increases focus and cognitive function</span></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(musicModal);
+        }
+
+        function connectSpotify() {
+            const infoModal = document.createElement('div');
+            infoModal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.9); display: flex; align-items: center;
+                justify-content: center; z-index: 1001; backdrop-filter: blur(15px);
+            `;
+            
+            infoModal.innerHTML = `
+                <div style="
+                    background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.9));
+                    backdrop-filter: blur(20px); border-radius: 20px; padding: 2.5rem;
+                    text-align: center; color: white; max-width: 500px; width: 90%;
+                    border: 1px solid rgba(30, 215, 96, 0.3);
+                ">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎵</div>
+                    <h2 style="color: #1ED760; margin-bottom: 1rem;">Connect Your Real Spotify Account</h2>
+                    <p style="color: #A0A0A0; margin-bottom: 1.5rem; line-height: 1.6;">
+                        To connect your actual Spotify account, this app needs to be registered with Spotify's Developer Platform.
+                    </p>
+                    
+                    <div style="background: rgba(30, 215, 96, 0.1); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; text-align: left;">
+                        <h4 style="color: #1ED760; margin-bottom: 0.5rem;">Required Setup Steps:</h4>
+                        <div style="color: #A0A0A0; font-size: 0.9rem; line-height: 1.5;">
+                            1. Register app at <strong style="color: #1ED760;">developer.spotify.com</strong><br>
+                            2. Get Client ID and Secret<br>
+                            3. Add redirect URI: <code style="background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 4px;">${window.location.href}</code><br>
+                            4. Configure app permissions
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button onclick="proceedWithDemo()" style="
+                            background: linear-gradient(135deg, #1ED760, #1DB954);
+                            border: none; border-radius: 12px; padding: 1rem 1.5rem;
+                            color: white; font-weight: 600; cursor: pointer;
+                        ">
+                            🎵 Try Demo Mode
+                        </button>
+                        <button onclick="openSpotifyDeveloper()" style="
+                            background: transparent; border: 2px solid #1ED760;
+                            border-radius: 12px; padding: 1rem 1.5rem;
+                            color: #1ED760; font-weight: 600; cursor: pointer;
+                        ">
+                            🔗 Setup Real Connection
+                        </button>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" style="
+                            background: transparent; border: 2px solid #666;
+                            border-radius: 12px; padding: 1rem 1.5rem;
+                            color: #666; cursor: pointer;
+                        ">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(infoModal);
+            
+            window.proceedWithDemo = function() {
+                infoModal.remove();
+                alert('🎵 Demo Mode Connected!\n\nSimulated Spotify integration active. You can now access all wellness playlists!');
+            };
+            
+            window.openSpotifyDeveloper = function() {
+                window.open('https://developer.spotify.com/dashboard/applications', '_blank');
+                infoModal.remove();
+            };
+        }
+
+        function playPlaylist(type) {
+            const playlists = {
+                'stress-relief': {
+                    name: 'Stress Relief & Meditation',
+                    tracks: ['Weightless - Marconi Union', 'Clair de Lune - Debussy', 'Spiegel im Spiegel - Arvo Pärt', 'River - Joni Mitchell'],
+                    duration: '2 hours 15 minutes'
+                },
+                'workout-energy': {
+                    name: 'Workout Energy Boost',
+                    tracks: ['Eye of the Tiger - Survivor', 'Stronger - Kanye West', 'Pump It - Black Eyed Peas', 'Thunder - Imagine Dragons'],
+                    duration: '1 hour 45 minutes'
+                },
+                'sleep-sounds': {
+                    name: 'Sleep & Recovery Sounds',
+                    tracks: ['Rain on Leaves', 'Ocean Waves', 'Forest Ambience', 'Gentle Piano Lullabies'],
+                    duration: '8 hours'
+                },
+                'focus-flow': {
+                    name: 'Focus & Flow State',
+                    tracks: ['40Hz Binaural Beats', 'Lo-fi Hip Hop Mix', 'Ambient Concentration', 'Study Music Playlist'],
+                    duration: '3 hours 30 minutes'
+                }
+            };
+            
+            const playlist = playlists[type];
+            alert(`🎵 Now Playing: ${playlist.name}\n\nFeatured Tracks:\n${playlist.tracks.map(track => `• ${track}`).join('\n')}\n\nDuration: ${playlist.duration}\n\nEnjoy your wellness music session!`);
+        }
+
+        function openStressGames() {
+            const gamesModal = document.createElement('div');
+            gamesModal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.8); display: flex; align-items: center;
+                justify-content: center; z-index: 1000; backdrop-filter: blur(10px);
+            `;
+            
+            gamesModal.innerHTML = `
+                <div style="
+                    background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.9));
+                    backdrop-filter: blur(20px); border-radius: 24px; padding: 2rem;
+                    max-width: 800px; width: 95%; max-height: 90vh; overflow-y: auto;
+                    border: 1px solid rgba(0, 212, 170, 0.3);
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="color: #00D4AA; font-size: 2rem; font-weight: 700; margin: 0;">
+                            🎮 Stress Relief Games
+                        </h2>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                        <div onclick="playGame('breathing')" style="
+                            background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1);
+                            border-radius: 16px; padding: 1.5rem; text-align: center; cursor: pointer;
+                        ">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🫁</div>
+                            <h4 style="color: #fff; margin-bottom: 0.5rem;">Breathing Bubbles</h4>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem; font-size: 0.9rem;">Pop bubbles with controlled breathing</p>
+                            <div style="background: rgba(0, 212, 170, 0.1); color: #00D4AA; padding: 0.5rem; border-radius: 8px; font-size: 0.8rem;">Reduces anxiety, improves focus</div>
+                        </div>
+                        
+                        <div onclick="playGame('zen')" style="
+                            background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1);
+                            border-radius: 16px; padding: 1.5rem; text-align: center; cursor: pointer;
+                        ">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🌱</div>
+                            <h4 style="color: #fff; margin-bottom: 0.5rem;">Zen Garden</h4>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem; font-size: 0.9rem;">Create peaceful patterns in sand</p>
+                            <div style="background: rgba(0, 212, 170, 0.1); color: #00D4AA; padding: 0.5rem; border-radius: 8px; font-size: 0.8rem;">Mindfulness, relaxation</div>
+                        </div>
+                        
+                        <div onclick="playGame('memory')" style="
+                            background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1);
+                            border-radius: 16px; padding: 1.5rem; text-align: center; cursor: pointer;
+                        ">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🌈</div>
+                            <h4 style="color: #fff; margin-bottom: 0.5rem;">Color Memory</h4>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem; font-size: 0.9rem;">Match colors to improve memory</p>
+                            <div style="background: rgba(0, 212, 170, 0.1); color: #00D4AA; padding: 0.5rem; border-radius: 8px; font-size: 0.8rem;">Cognitive function, focus</div>
+                        </div>
+                        
+                        <div onclick="playGame('aquarium')" style="
+                            background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1);
+                            border-radius: 16px; padding: 1.5rem; text-align: center; cursor: pointer;
+                        ">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🐠</div>
+                            <h4 style="color: #fff; margin-bottom: 0.5rem;">Virtual Aquarium</h4>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem; font-size: 0.9rem;">Care for digital fish</p>
+                            <div style="background: rgba(0, 212, 170, 0.1); color: #00D4AA; padding: 0.5rem; border-radius: 8px; font-size: 0.8rem;">Nurturing, calm focus</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(gamesModal);
+        }
+
+        function playGame(gameType) {
+            const games = {
+                breathing: "🫁 Breathing Bubbles Game Started!\n\nInhale slowly for 4 seconds, hold for 4, exhale for 4. Pop the bubbles as they appear!",
+                zen: "🌱 Zen Garden Game Started!\n\nUse your mouse to create peaceful patterns in the sand. Let your creativity flow!",
+                memory: "🌈 Color Memory Game Started!\n\nWatch the sequence of colors and repeat them back. Challenge your memory!",
+                aquarium: "🐠 Virtual Aquarium Game Started!\n\nFeed your fish, clean the tank, and watch them swim peacefully!"
+            };
+            
+            alert(games[gameType]);
+        }
+
+        function openAIChat() {
+            alert("🤖 AI Health Assistant\n\nHello! I'm your personal health AI. I can help with:\n\n• Recovery recommendations\n• Workout planning\n• Nutrition advice\n• Sleep optimization\n• Stress management\n\nWhat would you like to know?");
+        }
+
+        function showWorkout() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                backdrop-filter: blur(10px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.9));
+                    backdrop-filter: blur(20px);
+                    border-radius: 24px;
+                    padding: 2.5rem;
+                    max-width: 450px;
+                    width: 90%;
+                    border: 1px solid rgba(0, 212, 170, 0.3);
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+                ">
+                    <h2 style="color: #00D4AA; font-size: 1.8rem; font-weight: 700; margin-bottom: 1.5rem; text-align: center;">
+                        📊 Personal Fitness Profile
+                    </h2>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="color: #fff; display: block; margin-bottom: 0.5rem; font-weight: 500;">Height (cm)</label>
+                        <input id="height" type="number" placeholder="175" style="
+                            width: 100%;
+                            padding: 1rem;
+                            border-radius: 12px;
+                            border: 2px solid rgba(255, 255, 255, 0.1);
+                            background: rgba(255, 255, 255, 0.05);
+                            color: #fff;
+                            font-size: 1rem;
+                        " onfocus="this.style.borderColor='#00D4AA';" onblur="this.style.borderColor='rgba(255,255,255,0.1)';">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="color: #fff; display: block; margin-bottom: 0.5rem; font-weight: 500;">Weight (kg)</label>
+                        <input id="weight" type="number" placeholder="70" style="
+                            width: 100%;
+                            padding: 1rem;
+                            border-radius: 12px;
+                            border: 2px solid rgba(255, 255, 255, 0.1);
+                            background: rgba(255, 255, 255, 0.05);
+                            color: #fff;
+                            font-size: 1rem;
+                        " onfocus="this.style.borderColor='#00D4AA';" onblur="this.style.borderColor='rgba(255,255,255,0.1)';">
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label style="color: #fff; display: block; margin-bottom: 0.5rem; font-weight: 500;">Fitness Level</label>
+                        <select id="fitnessLevel" style="
+                            width: 100%;
+                            padding: 1rem;
+                            border-radius: 12px;
+                            border: 2px solid rgba(255, 255, 255, 0.1);
+                            background: rgba(255, 255, 255, 0.05);
+                            color: #fff;
+                            font-size: 1rem;
+                        " onfocus="this.style.borderColor='#00D4AA';" onblur="this.style.borderColor='rgba(255,255,255,0.1)';">
+                            <option value="beginner" style="background: #1a1a2e; color: #fff;">🌱 Beginner</option>
+                            <option value="intermediate" style="background: #1a1a2e; color: #fff;" selected>💪 Intermediate</option>
+                            <option value="advanced" style="background: #1a1a2e; color: #fff;">🔥 Advanced</option>
+                        </select>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button onclick="generateWorkout()" style="
+                            background: linear-gradient(135deg, #00D4AA 0%, #0066FF 100%);
+                            border: none;
+                            border-radius: 16px;
+                            padding: 1.2rem 2.5rem;
+                            color: white;
+                            font-size: 1rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                            margin: 0.5rem;
+                        ">
+                            🏋️ Generate My Workout
+                        </button>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" style="
+                            background: transparent;
+                            border: 2px solid rgba(255, 255, 255, 0.3);
+                            border-radius: 16px;
+                            padding: 1.2rem 2.5rem;
+                            color: white;
+                            font-size: 1rem;
+                            cursor: pointer;
+                            margin: 0.5rem;
+                        ">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function generateWorkout() {
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const fitnessLevel = document.getElementById('fitnessLevel').value;
+            
+            if (!height || !weight || height < 100 || height > 250 || weight < 30 || weight > 300) {
+                alert('⚠️ Please enter valid height (100-250 cm) and weight (30-300 kg)');
+                return;
+            }
+            
+            const bmi = (weight / ((height/100) ** 2)).toFixed(1);
+            
+            // Close profile modal
+            document.querySelector('div[style*="position: fixed"]').remove();
+            
+            // Show workout plan
+            showWorkoutPlan(bmi, fitnessLevel, height, weight);
+        }
+
+        function showWorkoutPlan(bmi, level, height, weight) {
+            const workouts = {
+                beginner: {
+                    exercises: [
+                        { name: 'Push-ups (Modified)', sets: '2x8-12', image: '🤲', description: 'Keep knees on ground, focus on form' },
+                        { name: 'Bodyweight Squats', sets: '2x10-15', image: '🏃', description: 'Sit back like sitting in chair' },
+                        { name: 'Plank Hold', sets: '2x20-30s', image: '🏋️', description: 'Keep straight line from head to heels' },
+                        { name: 'Walking', sets: '15-20 min', image: '🚶', description: 'Moderate pace, steady breathing' }
+                    ],
+                    duration: '25-30 minutes'
+                },
+                intermediate: {
+                    exercises: [
+                        { name: 'Standard Push-ups', sets: '3x12-15', image: '💪', description: 'Full range of motion, controlled pace' },
+                        { name: 'Jump Squats', sets: '3x10-12', image: '🦵', description: 'Explosive up, soft landing' },
+                        { name: 'Mountain Climbers', sets: '3x30s', image: '🏔️', description: 'Keep core tight, alternate legs' },
+                        { name: 'Burpees', sets: '2x8-10', image: '🔥', description: 'Full body movement, pace yourself' },
+                        { name: 'Plank to Push-up', sets: '2x8-10', image: '⬆️', description: 'Transition smoothly between positions' }
+                    ],
+                    duration: '35-45 minutes'
+                },
+                advanced: {
+                    exercises: [
+                        { name: 'Diamond Push-ups', sets: '4x15-20', image: '💎', description: 'Hands form diamond, target triceps' },
+                        { name: 'Pistol Squats', sets: '3x8-10 each leg', image: '🎯', description: 'Single leg squat, use assistance if needed' },
+                        { name: 'Handstand Push-ups', sets: '3x5-8', image: '🤸', description: 'Against wall, full range of motion' },
+                        { name: 'Muscle-ups', sets: '3x3-5', image: '🏋️♂️', description: 'Pull-up to dip transition' },
+                        { name: 'L-sit Hold', sets: '3x15-30s', image: '🔥', description: 'Legs parallel to ground' }
+                    ],
+                    duration: '45-60 minutes'
+                }
+            };
+
+            const workout = workouts[level];
+            const bmiCategory = bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Normal' : bmi < 30 ? 'Overweight' : 'Obese';
+            
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                backdrop-filter: blur(10px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.9));
+                    backdrop-filter: blur(20px);
+                    border-radius: 24px;
+                    padding: 2rem;
+                    max-width: 600px;
+                    width: 90%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    border: 1px solid rgba(0, 212, 170, 0.3);
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 style="color: #00D4AA; font-size: 1.8rem; font-weight: 700; margin: 0;">
+                            ${level.charAt(0).toUpperCase() + level.slice(1)} Workout Plan
+                        </h2>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
+                    </div>
+                    
+                    <div style="background: rgba(0, 212, 170, 0.1); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <p style="margin: 0; color: #fff;"><strong>Your Profile:</strong> ${height}cm, ${weight}kg | BMI ${bmi} (${bmiCategory})</p>
+                        <p style="margin: 0.5rem 0 0 0; color: #A0A0A0;">Duration: ${workout.duration}</p>
+                    </div>
+                    
+                    <div style="display: grid; gap: 1rem;">
+                        ${workout.exercises.map(exercise => `
+                            <div style="
+                                background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+                                border-radius: 16px;
+                                padding: 1.5rem;
+                                border: 1px solid rgba(255, 255, 255, 0.1);
+                            ">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                                    <div style="font-size: 2.5rem;">${exercise.image}</div>
+                                    <div>
+                                        <h3 style="color: #fff; margin: 0; font-size: 1.2rem;">${exercise.name}</h3>
+                                        <p style="color: #00D4AA; margin: 0.25rem 0 0 0; font-weight: 600;">${exercise.sets}</p>
+                                    </div>
+                                </div>
+                                <p style="color: #A0A0A0; margin: 0; font-size: 0.9rem;">${exercise.description}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button onclick="startWorkoutTimer()" style="
+                            background: linear-gradient(135deg, #00D4AA 0%, #0066FF 100%);
+                            border: none;
+                            border-radius: 16px;
+                            padding: 1rem 2rem;
+                            color: white;
+                            font-size: 1rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                        ">
+                            🏃 Start Workout Timer
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        let workoutTimer;
+        let workoutSeconds = 0;
+        let isWorkoutActive = false;
+
+        function startWorkoutTimer() {
+            if (isWorkoutActive) {
+                stopWorkoutTimer();
+                return;
+            }
+            
+            isWorkoutActive = true;
+            workoutSeconds = 0;
+            
+            // Create timer display
+            const timerDisplay = document.createElement('div');
+            timerDisplay.id = 'workout-timer';
+            timerDisplay.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                background: linear-gradient(135deg, #00D4AA 0%, #0066FF 100%);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 16px;
+                font-size: 1.2rem;
+                font-weight: 600;
+                z-index: 1001;
+                box-shadow: 0 8px 25px rgba(0, 212, 170, 0.4);
+            `;
+            
+            document.body.appendChild(timerDisplay);
+            
+            workoutTimer = setInterval(() => {
+                workoutSeconds++;
+                const minutes = Math.floor(workoutSeconds / 60);
+                const seconds = workoutSeconds % 60;
+                timerDisplay.innerHTML = `
+                    🏃 Workout Timer: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}<br>
+                    <button onclick="stopWorkoutTimer()" style="
+                        background: rgba(255, 255, 255, 0.2);
+                        border: none;
+                        color: white;
+                        padding: 0.3rem 0.8rem;
+                        border-radius: 8px;
+                        font-size: 0.8rem;
+                        cursor: pointer;
+                        margin-top: 0.5rem;
+                    ">⏹️ Stop</button>
+                `;
+            }, 1000);
+        }
+
+        function stopWorkoutTimer() {
+            if (!isWorkoutActive) return;
+            
+            isWorkoutActive = false;
+            clearInterval(workoutTimer);
+            
+            const timerDisplay = document.getElementById('workout-timer');
+            if (timerDisplay) {
+                timerDisplay.remove();
+            }
+            
+            const minutes = Math.floor(workoutSeconds / 60);
+            const seconds = workoutSeconds % 60;
+            
+            alert(`🎉 Workout Complete!\n\nTotal Time: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}\n\nGreat job! Remember to cool down and stretch.`);
+        }
+
+        function showTips() {
+            const tipsModal = document.createElement('div');
+            tipsModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                backdrop-filter: blur(10px);
+            `;
+            
+            tipsModal.innerHTML = `
+                <div style="
+                    background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.9));
+                    backdrop-filter: blur(20px);
+                    border-radius: 24px;
+                    padding: 2.5rem;
+                    max-width: 700px;
+                    width: 90%;
+                    max-height: 85vh;
+                    overflow-y: auto;
+                    border: 1px solid rgba(0, 212, 170, 0.3);
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="color: #00D4AA; font-size: 2rem; font-weight: 700; margin: 0;">
+                            💡 Wellness & Recovery Tips
+                        </h2>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
+                    </div>
+                    
+                    <!-- Stress Management Section -->
+                    <div style="background: rgba(255, 107, 53, 0.1); padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem;">
+                        <h3 style="color: #FF6B35; margin-bottom: 1rem; display: flex; align-items: center;">
+                            🧘♂️ Stress Management & Mental Wellness
+                        </h3>
+                        <div style="display: grid; gap: 1rem;">
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 12px;">
+                                <h4 style="color: #fff; margin-bottom: 0.5rem;">🌬️ Deep Breathing Techniques</h4>
+                                <p style="color: #A0A0A0; font-size: 0.9rem; margin-bottom: 0.5rem;">Practice 4-7-8 breathing: Inhale for 4, hold for 7, exhale for 8 seconds</p>
+                                <button onclick="startBreathingSession()" style="
+                                    background: linear-gradient(135deg, #FF6B35, #FF4757);
+                                    border: none; border-radius: 8px; padding: 0.5rem 1rem;
+                                    color: white; font-size: 0.8rem; cursor: pointer;
+                                ">🎯 Start 2-Min Session</button>
+                            </div>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 12px;">
+                                <h4 style="color: #fff; margin-bottom: 0.5rem;">🧘 Mindfulness & Meditation</h4>
+                                <p style="color: #A0A0A0; font-size: 0.9rem;">Daily 10-minute meditation reduces cortisol by 23% and improves focus</p>
+                            </div>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 12px;">
+                                <h4 style="color: #fff; margin-bottom: 0.5rem;">🎵 Music Therapy</h4>
+                                <p style="color: #A0A0A0; font-size: 0.9rem;">Listen to 432Hz or nature sounds for 15 minutes to reduce anxiety</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sleep Optimization -->
+                    <div style="background: rgba(0, 102, 255, 0.1); padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem;">
+                        <h3 style="color: #0066FF; margin-bottom: 1rem;">
+                            😴 Sleep Optimization for Recovery
+                        </h3>
+                        <div style="display: grid; gap: 1rem;">
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 12px;">
+                                <h4 style="color: #fff; margin-bottom: 0.5rem;">🌙 Sleep Hygiene Protocol</h4>
+                                <p style="color: #A0A0A0; font-size: 0.9rem;">• No screens 1 hour before bed<br>• Room temperature 65-68°F<br>• Complete darkness<br>• Consistent sleep schedule</p>
+                            </div>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 12px;">
+                                <h4 style="color: #fff; margin-bottom: 0.5rem;">🌿 Natural Sleep Aids</h4>
+                                <p style="color: #A0A0A0; font-size: 0.9rem;">Magnesium glycinate (200mg), chamomile tea, or valerian root 30 minutes before bed</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Nutrition for Mental Health -->
+                    <div style="background: rgba(0, 212, 170, 0.1); padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem;">
+                        <h3 style="color: #00D4AA; margin-bottom: 1rem;">
+                            🥗 Nutrition for Mental Clarity
+                        </h3>
+                        <div style="display: grid; gap: 1rem;">
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 12px;">
+                                <h4 style="color: #fff; margin-bottom: 0.5rem;">🦑 Brain-Boosting Foods</h4>
+                                <p style="color: #A0A0A0; font-size: 0.9rem;">Omega-3 rich fish, blueberries, dark chocolate (70%+), walnuts, green tea</p>
+                            </div>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 12px;">
+                                <h4 style="color: #fff; margin-bottom: 0.5rem;">💧 Hydration Strategy</h4>
+                                <p style="color: #A0A0A0; font-size: 0.9rem;">Drink 8-10 glasses daily. Add electrolytes if sweating. Dehydration reduces focus by 12%</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Physical Recovery -->
+                    <div style="background: rgba(155, 89, 182, 0.1); padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem;">
+                        <h3 style="color: #9B59B6; margin-bottom: 1rem;">
+                            💆♂️ Physical Recovery Techniques
+                        </h3>
+                        <div style="display: grid; gap: 1rem;">
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 12px;">
+                                <h4 style="color: #fff; margin-bottom: 0.5rem;">🧊 Cold & Heat Therapy</h4>
+                                <p style="color: #A0A0A0; font-size: 0.9rem;">Cold shower (2-3 min) + hot bath (15 min) improves circulation and reduces inflammation</p>
+                            </div>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 12px;">
+                                <h4 style="color: #fff; margin-bottom: 0.5rem;">🤸♂️ Active Recovery</h4>
+                                <p style="color: #A0A0A0; font-size: 0.9rem;">Light yoga, walking, or gentle stretching on rest days maintains blood flow</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Personalized Tips -->
+                    <div style="background: rgba(255, 184, 0, 0.1); padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem;">
+                        <h3 style="color: #FFB800; margin-bottom: 1rem;">🎯 Personalized Tips for You</h3>
+                        <p style="color: #A0A0A0; margin-bottom: 1rem;">Complete your profile to get personalized stress management tips!</p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button onclick="startWellnessChallenge()" style="
+                            background: linear-gradient(135deg, #00D4AA 0%, #0066FF 100%);
+                            border: none;
+                            border-radius: 16px;
+                            padding: 1rem 2rem;
+                            color: white;
+                            font-size: 1rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                        ">
+                            🎆 Start 7-Day Wellness Challenge
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(tipsModal);
+        }
+
+        function startBreathingSession() {
+            alert('🌬️ 2-Minute Breathing Session Started!\n\nFollow this pattern:\n• Inhale for 4 seconds\n• Hold for 7 seconds\n• Exhale for 8 seconds\n\nRepeat for 2 minutes. Focus on your breath and relax.');
+        }
+
+        function startWellnessChallenge() {
+            // Close tips modal first
+            document.querySelector('div[style*="position: fixed"]').remove();
+            
+            const challengeModal = document.createElement('div');
+            challengeModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                backdrop-filter: blur(10px);
+            `;
+            
+            challengeModal.innerHTML = `
+                <div style="
+                    background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.9));
+                    backdrop-filter: blur(20px);
+                    border-radius: 24px;
+                    padding: 2rem;
+                    max-width: 800px;
+                    width: 95%;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                    border: 1px solid rgba(0, 212, 170, 0.3);
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <div>
+                            <h1 style="color: #00D4AA; margin: 0; font-size: 2rem;">🎆 7-Day Wellness Challenge</h1>
+                            <p style="color: #A0A0A0; margin: 0.5rem 0 0 0;">Transform your health one day at a time</p>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
+                    </div>
+                    
+                    <div style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); padding: 2rem; border-radius: 20px; text-align: center; margin-bottom: 2rem; border: 1px solid rgba(0, 212, 170, 0.3);">
+                        <h2 style="color: #00D4AA; margin-bottom: 1rem;">Welcome to Your Wellness Journey!</h2>
+                        <p style="color: #A0A0A0;">Complete each daily goal to build lasting healthy habits. Track your progress and feel the difference in just one week.</p>
+                    </div>
+                    
+                    <div style="display: grid; gap: 1.5rem; margin-bottom: 2rem;">
+                        <div onclick="toggleDay(1)" style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); border-radius: 16px; padding: 1.5rem; border: 2px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#00D4AA';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div style="background: linear-gradient(135deg, #00D4AA, #0066FF); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem;">Day 1</div>
+                                <div style="font-size: 1.5rem;" id="day-1-status">⚪</div>
+                            </div>
+                            <h3 style="color: #fff; margin-bottom: 0.5rem;">🧘 Mindful Meditation</h3>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem;">Start with 10 minutes of guided meditation</p>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px; border-left: 3px solid #00D4AA;">
+                                <p style="color: #B0B0B0; font-size: 0.9rem; line-height: 1.6; margin: 0;">• Find a quiet space<br>• Use a meditation app or YouTube<br>• Focus on your breathing<br>• Don't judge your thoughts, just observe</p>
+                            </div>
+                        </div>
+                        
+                        <div onclick="toggleDay(2)" style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); border-radius: 16px; padding: 1.5rem; border: 2px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#00D4AA';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div style="background: linear-gradient(135deg, #00D4AA, #0066FF); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem;">Day 2</div>
+                                <div style="font-size: 1.5rem;" id="day-2-status">⚪</div>
+                            </div>
+                            <h3 style="color: #fff; margin-bottom: 0.5rem;">💧 Hydration Focus</h3>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem;">Drink 8 glasses of water throughout the day</p>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px; border-left: 3px solid #00D4AA;">
+                                <p style="color: #B0B0B0; font-size: 0.9rem; line-height: 1.6; margin: 0;">• Start with a glass upon waking<br>• Keep a water bottle nearby<br>• Add lemon or cucumber for flavor<br>• Track your intake</p>
+                            </div>
+                        </div>
+                        
+                        <div onclick="toggleDay(3)" style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); border-radius: 16px; padding: 1.5rem; border: 2px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#00D4AA';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div style="background: linear-gradient(135deg, #00D4AA, #0066FF); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem;">Day 3</div>
+                                <div style="font-size: 1.5rem;" id="day-3-status">⚪</div>
+                            </div>
+                            <h3 style="color: #fff; margin-bottom: 0.5rem;">🌙 Quality Sleep</h3>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem;">Get 8 hours of restorative sleep</p>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px; border-left: 3px solid #00D4AA;">
+                                <p style="color: #B0B0B0; font-size: 0.9rem; line-height: 1.6; margin: 0;">• No screens 1 hour before bed<br>• Keep room cool and dark<br>• Consistent sleep schedule<br>• Try relaxing tea or meditation</p>
+                            </div>
+                        </div>
+                        
+                        <div onclick="toggleDay(4)" style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); border-radius: 16px; padding: 1.5rem; border: 2px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#00D4AA';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div style="background: linear-gradient(135deg, #00D4AA, #0066FF); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem;">Day 4</div>
+                                <div style="font-size: 1.5rem;" id="day-4-status">⚪</div>
+                            </div>
+                            <h3 style="color: #fff; margin-bottom: 0.5rem;">🥗 Nutrition Boost</h3>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem;">Eat 5 servings of fruits and vegetables</p>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px; border-left: 3px solid #00D4AA;">
+                                <p style="color: #B0B0B0; font-size: 0.9rem; line-height: 1.6; margin: 0;">• Include colorful variety<br>• Try smoothies or salads<br>• Snack on fruits instead of processed foods<br>• Add veggies to every meal</p>
+                            </div>
+                        </div>
+                        
+                        <div onclick="toggleDay(5)" style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); border-radius: 16px; padding: 1.5rem; border: 2px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#00D4AA';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div style="background: linear-gradient(135deg, #00D4AA, #0066FF); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem;">Day 5</div>
+                                <div style="font-size: 1.5rem;" id="day-5-status">⚪</div>
+                            </div>
+                            <h3 style="color: #fff; margin-bottom: 0.5rem;">🌳 Nature Connection</h3>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem;">Take a 30-minute walk in nature</p>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px; border-left: 3px solid #00D4AA;">
+                                <p style="color: #B0B0B0; font-size: 0.9rem; line-height: 1.6; margin: 0;">• Find a park, trail, or green space<br>• Leave your phone in airplane mode<br>• Practice mindful walking<br>• Breathe deeply and observe surroundings</p>
+                            </div>
+                        </div>
+                        
+                        <div onclick="toggleDay(6)" style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); border-radius: 16px; padding: 1.5rem; border: 2px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#00D4AA';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div style="background: linear-gradient(135deg, #00D4AA, #0066FF); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem;">Day 6</div>
+                                <div style="font-size: 1.5rem;" id="day-6-status">⚪</div>
+                            </div>
+                            <h3 style="color: #fff; margin-bottom: 0.5rem;">📵 Digital Detox</h3>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem;">Disconnect from devices for 2 hours</p>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px; border-left: 3px solid #00D4AA;">
+                                <p style="color: #B0B0B0; font-size: 0.9rem; line-height: 1.6; margin: 0;">• Choose a 2-hour window<br>• Turn off notifications<br>• Engage in offline activities<br>• Read, draw, or spend time with loved ones</p>
+                            </div>
+                        </div>
+                        
+                        <div onclick="toggleDay(7)" style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); border-radius: 16px; padding: 1.5rem; border: 2px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#00D4AA';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div style="background: linear-gradient(135deg, #00D4AA, #0066FF); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem;">Day 7</div>
+                                <div style="font-size: 1.5rem;" id="day-7-status">⚪</div>
+                            </div>
+                            <h3 style="color: #fff; margin-bottom: 0.5rem;">😊 Gratitude Practice</h3>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem;">Write down 5 things you're grateful for</p>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px; border-left: 3px solid #00D4AA;">
+                                <p style="color: #B0B0B0; font-size: 0.9rem; line-height: 1.6; margin: 0;">• Use a journal or notes app<br>• Be specific and detailed<br>• Include big and small things<br>• Reflect on why you're grateful</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); border-radius: 20px; padding: 2rem; text-align: center; border: 1px solid rgba(0, 212, 170, 0.3);">
+                        <h3 style="color: #00D4AA; margin-bottom: 1.5rem;">Your Progress</h3>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="flex: 1; height: 12px; background: rgba(255, 255, 255, 0.1); border-radius: 6px; overflow: hidden;">
+                                <div id="wellness-progress-fill" style="height: 100%; background: linear-gradient(90deg, #00D4AA, #0066FF); border-radius: 6px; width: 0%; transition: width 0.8s ease;"></div>
+                            </div>
+                            <span id="progress-text-wellness" style="color: #A0A0A0;">0/7 Days Complete</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(challengeModal);
+        }
+
+        let completedDays = 0;
+        function toggleDay(dayNumber) {
+            const statusElement = document.getElementById(`day-${dayNumber}-status`);
+            const progressFill = document.getElementById('wellness-progress-fill');
+            const progressText = document.getElementById('progress-text-wellness');
+            
+            if (statusElement.textContent === '⚪') {
+                statusElement.textContent = '✅';
+                completedDays++;
+            } else {
+                statusElement.textContent = '⚪';
+                completedDays--;
+            }
+            
+            const progressPercentage = (completedDays / 7) * 100;
+            progressFill.style.width = progressPercentage + '%';
+            progressText.textContent = `${completedDays}/7 Days Complete`;
+            
+            if (completedDays === 7) {
+                setTimeout(() => {
+                    alert('🎉 Congratulations! You\'ve completed the 7-Day Wellness Challenge!\n\nYou\'ve built amazing healthy habits. Keep up the great work!');
+                }, 500);
+            }
+        }
+
+        function simulateDataUpdate() {
+            currentScore = Math.floor(Math.random() * 40) + 60; // 60-100
+            document.getElementById('score').textContent = currentScore;
+            animateDial();
+            
+            // Update recommendation
+            const recommendation = document.querySelector('.recommendation h2');
+            if (currentScore >= 85) {
+                recommendation.textContent = '💪 High Intensity Day';
+            } else if (currentScore >= 70) {
+                recommendation.textContent = '🏃♂️ Moderate Training Day';
+            } else {
+                recommendation.textContent = '😴 Active Recovery Day';
+            }
+        }
+
+        function showInsights() {
+            const insights = [
+                "🔍 AI detected: Your sleep pattern improved 15% this week!",
+                "📈 Trend analysis: Your recovery is trending upward consistently.",
+                "⚠️ Recommendation: Consider reducing intensity tomorrow based on strain patterns.",
+                "🎯 Optimization: Your best training window is 10 AM - 12 PM based on your data.",
+                "💡 Insight: Your nutrition timing correlates with better recovery scores."
+            ];
+            
+            const randomInsight = insights[Math.floor(Math.random() * insights.length)];
+            alert(randomInsight);
+        }
+
+        function unlockAchievement() {
+            const achievements = [
+                "🏆 Achievement Unlocked: Data Driven - Used AI coach 50 times!",
+                "🌟 Achievement Unlocked: Wellness Warrior - Balanced all factors above 80%!",
+                "🔥 Achievement Unlocked: Streak Master - 50-day consistency streak!",
+                "💎 Achievement Unlocked: Recovery Guru - Maintained 90+ score for 7 days!"
+            ];
+            
+            const randomAchievement = achievements[Math.floor(Math.random() * achievements.length)];
+            
+            // Create notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #00D4AA 0%, #0066FF 100%);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 212, 170, 0.3);
+                z-index: 1000;
+                animation: slideIn 0.5s ease;
+            `;
+            notification.textContent = randomAchievement;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+        }
+
+        function showMuscleMap() {
+            const muscleModal = document.createElement('div');
+            muscleModal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.8); display: flex; align-items: center;
+                justify-content: center; z-index: 1000; backdrop-filter: blur(10px);
+            `;
+            
+            muscleModal.innerHTML = `
+                <div style="
+                    background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.9));
+                    backdrop-filter: blur(20px); border-radius: 24px; padding: 2rem;
+                    max-width: 800px; width: 95%; max-height: 90vh; overflow-y: auto;
+                    border: 1px solid rgba(0, 212, 170, 0.3);
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <div>
+                            <h1 style="color: #00D4AA; margin: 0; font-size: 2rem;">Muscle Recovery & Workouts</h1>
+                            <p style="color: #A0A0A0; margin: 0.5rem 0 0 0;">Target specific muscle groups based on recovery status</p>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                        <div onclick="showWorkoutDetails('chest')" style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); backdrop-filter: blur(20px); border-radius: 20px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.4s ease; border: 2px solid rgba(255, 255, 255, 0.1);" onmouseover="this.style.transform='translateY(-8px) scale(1.02)'; this.style.borderColor='#00D4AA';" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.borderColor='rgba(255,255,255,0.1)';">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">💪</div>
+                            <h3 style="color: #fff; font-size: 1.5rem; margin-bottom: 1rem;">Chest</h3>
+                            <div style="padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; margin-bottom: 1rem; background: rgba(0, 212, 170, 0.2); color: #00D4AA; border: 1px solid #00D4AA;">85% Recovered</div>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem;">Push-ups, Chest Press, Flyes</p>
+                            <div style="padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; background: linear-gradient(135deg, #00D4AA, #0066FF); color: white;">Ready for Training</div>
+                        </div>
+                        
+                        <div onclick="showWorkoutDetails('shoulders')" style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); backdrop-filter: blur(20px); border-radius: 20px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.4s ease; border: 2px solid rgba(255, 255, 255, 0.1);" onmouseover="this.style.transform='translateY(-8px) scale(1.02)'; this.style.borderColor='#00D4AA';" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.borderColor='rgba(255,255,255,0.1)';">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">🤾</div>
+                            <h3 style="color: #fff; font-size: 1.5rem; margin-bottom: 1rem;">Shoulders</h3>
+                            <div style="padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; margin-bottom: 1rem; background: rgba(0, 102, 255, 0.2); color: #0066FF; border: 1px solid #0066FF;">70% Recovered</div>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem;">Shoulder Press, Lateral Raises</p>
+                            <div style="padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; background: linear-gradient(135deg, #FFB800, #FF6B35); color: white;">Moderate Intensity</div>
+                        </div>
+                        
+                        <div onclick="showWorkoutDetails('quadriceps')" style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); backdrop-filter: blur(20px); border-radius: 20px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.4s ease; border: 2px solid rgba(255, 255, 255, 0.1);" onmouseover="this.style.transform='translateY(-8px) scale(1.02)'; this.style.borderColor='#00D4AA';" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.borderColor='rgba(255,255,255,0.1)';">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">🦵</div>
+                            <h3 style="color: #fff; font-size: 1.5rem; margin-bottom: 1rem;">Quadriceps</h3>
+                            <div style="padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; margin-bottom: 1rem; background: rgba(255, 184, 0, 0.2); color: #FFB800; border: 1px solid #FFB800;">60% Recovered</div>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem;">Squats, Lunges, Wall Sits</p>
+                            <div style="padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; background: linear-gradient(135deg, #FF6B35, #FF4757); color: white;">Light Training</div>
+                        </div>
+                        
+                        <div onclick="showWorkoutDetails('calves')" style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); backdrop-filter: blur(20px); border-radius: 20px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.4s ease; border: 2px solid rgba(255, 255, 255, 0.1);" onmouseover="this.style.transform='translateY(-8px) scale(1.02)'; this.style.borderColor='#00D4AA';" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.borderColor='rgba(255,255,255,0.1)';">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">🦵</div>
+                            <h3 style="color: #fff; font-size: 1.5rem; margin-bottom: 1rem;">Calves</h3>
+                            <div style="padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; margin-bottom: 1rem; background: rgba(0, 212, 170, 0.2); color: #00D4AA; border: 1px solid #00D4AA;">90% Recovered</div>
+                            <p style="color: #A0A0A0; margin-bottom: 1rem;">Calf Raises, Jump Rope</p>
+                            <div style="padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; background: linear-gradient(135deg, #00D4AA, #0066FF); color: white;">Ready for Training</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.6)); backdrop-filter: blur(20px); border-radius: 20px; padding: 2rem; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <h3 style="color: #00D4AA; margin-bottom: 1.5rem; text-align: center;">Recovery Status Guide</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem; color: #A0A0A0;">
+                                <div style="width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; background: #00D4AA;"></div>
+                                <span>80-100% - Ready for intense training</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem; color: #A0A0A0;">
+                                <div style="width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; background: #0066FF;"></div>
+                                <span>60-79% - Moderate intensity recommended</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem; color: #A0A0A0;">
+                                <div style="width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; background: #FFB800;"></div>
+                                <span>40-59% - Light exercises only</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem; color: #A0A0A0;">
+                                <div style="width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; background: #FF4757;"></div>
+                                <span>0-39% - Rest and recovery needed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(muscleModal);
+        }
+
+        function showWorkoutDetails(muscleGroup) {
+            const workouts = {
+                chest: {
+                    recovery: 85,
+                    status: 'Excellent - Ready for intense training',
+                    exercises: [
+                        { name: 'Push-ups', sets: '3x12-15', description: 'Standard form, full range of motion' },
+                        { name: 'Chest Press', sets: '3x10-12', description: 'Controlled movement, squeeze at top' },
+                        { name: 'Chest Flyes', sets: '3x12-15', description: 'Wide arc, feel the stretch' },
+                        { name: 'Incline Push-ups', sets: '2x10-12', description: 'Feet elevated, target upper chest' }
+                    ]
+                },
+                shoulders: {
+                    recovery: 70,
+                    status: 'Good - Moderate intensity recommended',
+                    exercises: [
+                        { name: 'Shoulder Press', sets: '3x10-12', description: 'Press overhead, control the weight' },
+                        { name: 'Lateral Raises', sets: '3x12-15', description: 'Lift to shoulder height, slow control' },
+                        { name: 'Front Raises', sets: '3x10-12', description: 'Forward lift, engage core' },
+                        { name: 'Rear Delt Flyes', sets: '3x12-15', description: 'Squeeze shoulder blades together' }
+                    ]
+                },
+                quadriceps: {
+                    recovery: 60,
+                    status: 'Moderate - Light exercises recommended',
+                    exercises: [
+                        { name: 'Squats', sets: '3x12-15', description: 'Sit back, knees track over toes' },
+                        { name: 'Lunges', sets: '3x10 each leg', description: 'Step forward, 90-degree angles' },
+                        { name: 'Wall Sits', sets: '3x30-45s', description: 'Back against wall, thighs parallel' },
+                        { name: 'Step-ups', sets: '3x12 each leg', description: 'Step up, control the descent' }
+                    ]
+                },
+                calves: {
+                    recovery: 90,
+                    status: 'Excellent - Ready for intense training',
+                    exercises: [
+                        { name: 'Calf Raises', sets: '4x15-20', description: 'Rise up on toes, squeeze at top' },
+                        { name: 'Single Leg Raises', sets: '3x12 each', description: 'One leg at a time, balance' },
+                        { name: 'Seated Calf Raises', sets: '3x15-20', description: 'Seated position, weight on thighs' },
+                        { name: 'Jump Rope', sets: '3x30s', description: 'Light bouncing, stay on toes' }
+                    ]
+                }
+            };
+            
+            const workout = workouts[muscleGroup];
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1001;
+                backdrop-filter: blur(10px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.9));
+                    backdrop-filter: blur(20px);
+                    border-radius: 24px;
+                    padding: 2rem;
+                    max-width: 500px;
+                    width: 90%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    border: 1px solid rgba(0, 212, 170, 0.3);
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 style="color: #00D4AA; font-size: 1.5rem; margin: 0;">
+                            ${muscleGroup.charAt(0).toUpperCase() + muscleGroup.slice(1)} Workout
+                        </h2>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
+                    </div>
+                    
+                    <div style="background: rgba(0, 212, 170, 0.1); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <p style="color: #fff; margin: 0;">Recovery Status: <span style="color: #00D4AA;">${workout.recovery}%</span></p>
+                        <p style="color: #A0A0A0; margin: 0.5rem 0 0 0; font-size: 0.9rem;">${workout.status}</p>
+                    </div>
+                    
+                    <div style="display: grid; gap: 1rem;">
+                        ${workout.exercises.map(exercise => `
+                            <div style="
+                                background: rgba(255, 255, 255, 0.05);
+                                border-radius: 12px;
+                                padding: 1rem;
+                                border-left: 3px solid #00D4AA;
+                            ">
+                                <h4 style="color: #fff; margin: 0 0 0.5rem 0;">${exercise.name}</h4>
+                                <p style="color: #00D4AA; margin: 0 0 0.5rem 0; font-weight: 600;">${exercise.sets}</p>
+                                <p style="color: #A0A0A0; margin: 0; font-size: 0.9rem;">${exercise.description}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 1.5rem;">
+                        <button onclick="startWorkout('${muscleGroup}')" style="
+                            background: linear-gradient(135deg, #00D4AA 0%, #0066FF 100%);
+                            border: none;
+                            border-radius: 12px;
+                            padding: 1rem 2rem;
+                            color: white;
+                            font-size: 1rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                        ">
+                            Start ${muscleGroup.charAt(0).toUpperCase() + muscleGroup.slice(1)} Workout
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function startWorkout(muscleGroup) {
+            alert(`${muscleGroup.charAt(0).toUpperCase() + muscleGroup.slice(1)} workout started!\n\nRemember to:\n• Warm up properly\n• Focus on form\n• Rest between sets\n• Stay hydrated\n• Cool down after`);
+        }
+
+        // Initialize dial animation on load
+        window.addEventListener('load', () => {
+            setTimeout(animateDial, 500);
+        });
+
+        function syncHealthData() {
+            const syncModal = document.createElement('div');
+            syncModal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.8); display: flex; align-items: center;
+                justify-content: center; z-index: 1000; backdrop-filter: blur(10px);
+            `;
+            
+            syncModal.innerHTML = `
+                <div style="
+                    background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.9));
+                    backdrop-filter: blur(20px); border-radius: 24px; padding: 2.5rem;
+                    max-width: 600px; width: 90%; max-height: 85vh; overflow-y: auto;
+                    border: 1px solid rgba(0, 212, 170, 0.3);
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="color: #00D4AA; font-size: 2rem; font-weight: 700; margin: 0;">📱 Sync Health Data</h2>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
+                    </div>
+                    
+                    <p style="color: #A0A0A0; margin-bottom: 2rem; text-align: center;">Connect your devices to get real-time health insights</p>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #fff; margin-bottom: 1rem;">⌚ Smartwatches</h3>
+                        <div style="display: grid; gap: 1rem;">
+                            <div onclick="connectDevice('Apple Watch')" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1rem; cursor: pointer; display: flex; align-items: center; gap: 1rem;">
+                                <div style="font-size: 2rem;">🍎</div>
+                                <div><h4 style="color: #fff; margin: 0;">Apple Watch</h4><p style="color: #A0A0A0; margin: 0; font-size: 0.9rem;">Heart rate, sleep, activity, workouts</p></div>
+                                <div style="margin-left: auto; color: #00D4AA; font-weight: 600;">Connect</div>
+                            </div>
+                            <div onclick="connectDevice('Samsung Galaxy Watch')" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1rem; cursor: pointer; display: flex; align-items: center; gap: 1rem;">
+                                <div style="font-size: 2rem;">📱</div>
+                                <div><h4 style="color: #fff; margin: 0;">Samsung Galaxy Watch</h4><p style="color: #A0A0A0; margin: 0; font-size: 0.9rem;">Heart rate, sleep, stress, body composition</p></div>
+                                <div style="margin-left: auto; color: #00D4AA; font-weight: 600;">Connect</div>
+                            </div>
+                            <div onclick="connectDevice('Fitbit')" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1rem; cursor: pointer; display: flex; align-items: center; gap: 1rem;">
+                                <div style="font-size: 2rem;">⌚</div>
+                                <div><h4 style="color: #fff; margin: 0;">Fitbit</h4><p style="color: #A0A0A0; margin: 0; font-size: 0.9rem;">Steps, heart rate, sleep stages, active minutes</p></div>
+                                <div style="margin-left: auto; color: #00D4AA; font-weight: 600;">Connect</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #fff; margin-bottom: 1rem;">📱 Health Apps</h3>
+                        <div style="display: grid; gap: 1rem;">
+                            <div onclick="connectDevice('Apple Health')" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1rem; cursor: pointer; display: flex; align-items: center; gap: 1rem;">
+                                <div style="font-size: 2rem;">❤️</div>
+                                <div><h4 style="color: #fff; margin: 0;">Apple Health</h4><p style="color: #A0A0A0; margin: 0; font-size: 0.9rem;">Comprehensive health data from iPhone & Apple Watch</p></div>
+                                <div style="margin-left: auto; color: #00D4AA; font-weight: 600;">Connect</div>
+                            </div>
+                            <div onclick="connectDevice('Google Fit')" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1rem; cursor: pointer; display: flex; align-items: center; gap: 1rem;">
+                                <div style="font-size: 2rem;">🏋️</div>
+                                <div><h4 style="color: #fff; margin: 0;">Google Fit</h4><p style="color: #A0A0A0; margin: 0; font-size: 0.9rem;">Activity tracking, heart points, move minutes</p></div>
+                                <div style="margin-left: auto; color: #00D4AA; font-weight: 600;">Connect</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(0, 212, 170, 0.1); padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem;">
+                        <h3 style="color: #00D4AA; margin-bottom: 1rem;">What We Track</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; font-size: 0.9rem;">
+                            <div style="color: #A0A0A0;">• <span style="color: #fff;">Heart Rate & HRV</span></div>
+                            <div style="color: #A0A0A0;">• <span style="color: #fff;">Sleep Quality & Stages</span></div>
+                            <div style="color: #A0A0A0;">• <span style="color: #fff;">Activity & Workouts</span></div>
+                            <div style="color: #A0A0A0;">• <span style="color: #fff;">Stress Levels</span></div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 12px; text-align: center;">
+                        <p style="color: #A0A0A0; font-size: 0.9rem; margin: 0;">🔒 Your health data is encrypted and secure. We never share personal information.</p>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(syncModal);
+        }
+
+        function connectDevice(deviceName) {
+            alert(`🔗 Connecting to ${deviceName}...\n\nThis will allow Recovery Navigator to:\n• Monitor your heart rate\n• Track sleep quality\n• Analyze workout data\n• Measure stress levels\n\nConnection successful! Your health data is now syncing.`);
+        }
+
+        // Update score periodically
+        setInterval(() => {
+            currentScore = Math.max(60, Math.min(95, currentScore + (Math.random() - 0.5) * 3));
+            document.getElementById('score').textContent = Math.round(currentScore);
+        }, 10000);
+    </script>
+</body>
+</html>

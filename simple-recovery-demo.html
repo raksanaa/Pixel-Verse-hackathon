@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recovery Navigator - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00D4AA, #0066FF);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .greeting {
+            font-weight: 600;
+        }
+
+        .date {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .recovery-dial {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dial-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+        }
+
+        .dial-bg {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                #FF4757 0deg 90deg,
+                #FFB800 90deg 180deg,
+                #0066FF 180deg 270deg,
+                #00D4AA 270deg 360deg
+            );
+            padding: 10px;
+            animation: rotate 10s linear infinite;
+        }
+
+        .dial-inner {
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .recovery-score {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #00D4AA;
+            margin-bottom: 5px;
+        }
+
+        .recovery-status {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #00D4AA;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .recommendation {
+            background: rgba(0, 212, 170, 0.1);
+            border: 1px solid #00D4AA;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .rec-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #00D4AA;
+        }
+
+        .rec-text {
+            color: #ccc;
+            line-height: 1.5;
+        }
+
+        .factors-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .factor-card {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .factor-card:hover {
+            transform: translateY(-5px);
+            border-color: #00D4AA;
+        }
+
+        .factor-icon {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .factor-name {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .factor-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .factor-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .factor-progress {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 2s ease;
+        }
+
+        .voice-coach {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .coach-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .coach-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .coach-message {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid #8B5CF6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+
+        .voice-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .voice-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+
+        .achievements {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .achievement {
+            flex: 1;
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .achievement-text {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #00D4AA, #0066FF);
+            color: white;
+        }
+
+        .nav-tab:not(.active) {
+            color: #888;
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00D4AA;
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles" id="particles"></div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="user-info">
+                <div class="avatar">👤</div>
+                <div>
+                    <div class="greeting">Good morning, Alex!</div>
+                    <div class="date" id="current-date"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="switchTab('overview')">Overview</div>
+            <div class="nav-tab" onclick="switchTab('insights')">Insights</div>
+            <div class="nav-tab" onclick="switchTab('progress')">Progress</div>
+        </div>
+
+        <div id="overview-tab">
+            <div class="recovery-dial">
+                <div class="dial-container">
+                    <div class="dial-bg">
+                        <div class="dial-inner">
+                            <div class="recovery-score" id="recovery-score">85</div>
+                            <div class="recovery-status">Optimal</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="color: #888; font-size: 0.9rem;">Recovery Status</div>
+            </div>
+
+            <div class="recommendation">
+                <div class="rec-title">🎯 Today's Recommendation</div>
+                <div class="rec-text" id="recommendation-text">
+                    Perfect day for a moderate intensity workout! Your recovery metrics show optimal readiness. Consider strength training or HIIT.
+                </div>
+            </div>
+
+            <div class="factors-grid">
+                <div class="factor-card">
+                    <div class="factor-icon">😴</div>
+                    <div class="factor-name">Sleep Quality</div>
+                    <div class="factor-value" style="color: #00D4AA;">92%</div>
+                    <div class="factor-bar">
+                        <div class="factor-progress" style="background: #00D4AA; width: 92%;"></div>
+                    </div>
+                </div>
+
+                <div class="factor-card">
+                    <div class="factor-icon">❤️</div>
+                    <div class="factor-name">HRV</div>
+                    <div class="factor-value" style="color: #0066FF;">78ms</div>
+                    <div class="factor-bar">
+                        <div class="factor-progress" style="background: #0066FF; width: 85%;"></div>
+                    </div>
+                </div>
+
+                <div class="factor-card">
+                    <div class="factor-icon">💪</div>
+                    <div class="factor-name">Muscle Strain</div>
+                    <div class="factor-value" style="color: #FFB800;">Low</div>
+                    <div class="factor-bar">
+                        <div class="factor-progress" style="background: #FFB800; width: 25%;"></div>
+                    </div>
+                </div>
+
+                <div class="factor-card">
+                    <div class="factor-icon">🧠</div>
+                    <div class="factor-name">Stress Level</div>
+                    <div class="factor-value" style="color: #00D4AA;">Minimal</div>
+                    <div class="factor-bar">
+                        <div class="factor-progress" style="background: #00D4AA; width: 15%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="achievements">
+                <div class="achievement">
+                    <div class="achievement-icon">🔥</div>
+                    <div class="achievement-text">7 Day Streak</div>
+                </div>
+                <div class="achievement">
+                    <div class="achievement-icon">🏆</div>
+                    <div class="achievement-text">Recovery Master</div>
+                </div>
+                <div class="achievement">
+                    <div class="achievement-icon">⭐</div>
+                    <div class="achievement-text">Perfect Week</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="voice-coach">
+            <div class="coach-header">
+                <div class="coach-avatar">🤖</div>
+                <div>
+                    <div style="font-weight: 600;">AI Recovery Coach</div>
+                    <div style="font-size: 0.9rem; color: #888;">Ready to help</div>
+                </div>
+            </div>
+            <div class="coach-message" id="coach-message">
+                Hi Alex! Your recovery looks excellent today. Ready for a challenging workout? I can suggest some exercises based on your current state.
+            </div>
+            <button class="voice-button" onclick="toggleVoiceCoach()">
+                <span id="voice-text">🎤 Ask Your Coach</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Set current date
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'short',
+            day: 'numeric'
+        });
+
+        // Create floating particles
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            
+            const colors = ['#00D4AA', '#0066FF', '#8B5CF6', '#EC4899'];
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            document.getElementById('particles').appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 6000);
+        }
+
+        // Create particles periodically
+        setInterval(createParticle, 500);
+
+        // Voice coach functionality
+        let isListening = false;
+        const coachMessages = [
+            "Your sleep quality is excellent! This is perfect for muscle recovery.",
+            "I notice your HRV is in the optimal range. Great cardiovascular health!",
+            "Low muscle strain means you can push harder today. Try some strength training!",
+            "Your stress levels are minimal. Perfect mental state for peak performance!",
+            "Based on your metrics, I recommend a 45-minute moderate intensity workout.",
+            "Remember to stay hydrated and maintain proper form during your workout!"
+        ];
+
+        function toggleVoiceCoach() {
+            const button = document.getElementById('voice-text');
+            const message = document.getElementById('coach-message');
+            
+            if (!isListening) {
+                isListening = true;
+                button.textContent = '🎤 Listening...';
+                
+                setTimeout(() => {
+                    const randomMessage = coachMessages[Math.floor(Math.random() * coachMessages.length)];
+                    message.textContent = randomMessage;
+                    button.textContent = '🎤 Ask Your Coach';
+                    isListening = false;
+                }, 2000);
+            }
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Update tab appearance
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Simple tab content switching (for demo)
+            if (tabName === 'insights') {
+                document.getElementById('coach-message').textContent = 
+                    "Based on your 7-day trend, you're maintaining excellent recovery patterns. Keep up the great work!";
+            } else if (tabName === 'progress') {
+                document.getElementById('coach-message').textContent = 
+                    "You've improved your average recovery score by 12% this month. Outstanding progress!";
+            } else {
+                document.getElementById('coach-message').textContent = 
+                    "Hi Alex! Your recovery looks excellent today. Ready for a challenging workout?";
+            }
+        }
+
+        // Simulate real-time data updates
+        function updateRecoveryData() {
+            const score = document.getElementById('recovery-score');
+            const currentScore = parseInt(score.textContent);
+            const newScore = Math.max(75, Math.min(95, currentScore + (Math.random() - 0.5) * 4));
+            score.textContent = Math.round(newScore);
+            
+            // Update recommendation based on score
+            const recText = document.getElementById('recommendation-text');
+            if (newScore >= 85) {
+                recText.textContent = "Perfect day for a high intensity workout! Your recovery metrics show optimal readiness. Consider strength training or HIIT.";
+            } else if (newScore >= 70) {
+                recText.textContent = "Good recovery status. Moderate intensity workout recommended. Focus on technique and form.";
+            } else {
+                recText.textContent = "Your body needs more recovery time. Consider light activity like walking or gentle stretching.";
+            }
+        }
+
+        // Update data every 10 seconds
+        setInterval(updateRecoveryData, 10000);
+
+        // Add some interactive hover effects
+        document.querySelectorAll('.factor-card, .achievement, .voice-coach').forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                element.style.transform = 'translateY(-5px) scale(1.02)';
+            });
+            
+            element.addEventListener('mouseleave', () => {
+                element.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

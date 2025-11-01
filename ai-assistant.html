@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Health Assistant - Recovery Navigator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00D4AA, #0066FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        
+        .assistant-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .doctor-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .doctor-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #00D4AA, #0066FF);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .doctor-details h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        .doctor-details .credentials {
+            color: #00D4AA;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .doctor-details .role {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .specializations {
+            margin-bottom: 25px;
+        }
+        
+        .specializations h4 {
+            margin-bottom: 15px;
+            color: #0066FF;
+        }
+        
+        .specializations ul {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+        }
+        
+        .specializations li {
+            padding-left: 20px;
+            position: relative;
+            color: #ccc;
+        }
+        
+        .specializations li::before {
+            content: "•";
+            color: #00D4AA;
+            position: absolute;
+            left: 0;
+        }
+        
+        .consultation-prompt {
+            background: rgba(0, 212, 170, 0.1);
+            border: 1px solid rgba(0, 212, 170, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .action-btn:hover {
+            background: rgba(0, 212, 170, 0.1);
+            border-color: #00D4AA;
+            transform: translateY(-2px);
+        }
+        
+        .chat-interface {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 15px 20px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .chat-input::placeholder {
+            color: #888;
+        }
+        
+        .send-btn {
+            background: linear-gradient(135deg, #00D4AA, #0066FF);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 15px;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .doctor-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goBack()">← Back</button>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">AI Health Assistant</h1>
+            <p class="subtitle">Powered by Advanced AI</p>
+        </div>
+        
+        <div class="assistant-card">
+            <button class="close-btn" onclick="goBack()">✕</button>
+            
+            <div class="doctor-info">
+                <div class="doctor-avatar">👩‍⚕️</div>
+                <div class="doctor-details">
+                    <h3>Dr. Alexandra Chen, MD</h3>
+                    <div class="credentials">Board-Certified Sports Medicine Physician</div>
+                    <div class="role">Recovery Navigator Medical Consultant</div>
+                </div>
+            </div>
+            
+            <div class="specializations">
+                <h4>Clinical Specializations:</h4>
+                <ul>
+                    <li>Physiological Recovery Assessment & Optimization</li>
+                    <li>Evidence-Based Exercise Prescription</li>
+                    <li>Nutritional Intervention & Metabolic Health</li>
+                    <li>Stress Management & Autonomic Regulation</li>
+                    <li>Sleep Architecture & Circadian Rhythm Optimization</li>
+                </ul>
+            </div>
+            
+            <div class="consultation-prompt">
+                <p>Please describe your specific health concern or performance objective for personalized clinical guidance.</p>
+            </div>
+            
+            <div class="quick-actions">
+                <div class="action-btn" onclick="selectTopic('recovery')">
+                    Recovery Assessment
+                </div>
+                <div class="action-btn" onclick="selectTopic('exercise')">
+                    Exercise Prescription
+                </div>
+                <div class="action-btn" onclick="selectTopic('stress')">
+                    Stress Management
+                </div>
+                <div class="action-btn" onclick="selectTopic('sleep')">
+                    Sleep Optimization
+                </div>
+            </div>
+            
+            <div class="chat-interface">
+                <div class="chat-input-container">
+                    <input 
+                        type="text" 
+                        class="chat-input" 
+                        placeholder="Ask me anything about your health..."
+                        id="chatInput"
+                        onkeypress="handleKeyPress(event)"
+                    >
+                    <button class="send-btn" onclick="sendMessage()">🚀</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+        
+        function selectTopic(topic) {
+            const input = document.getElementById('chatInput');
+            const topics = {
+                recovery: "I'd like help with recovery assessment and optimization strategies.",
+                exercise: "Can you help me with exercise prescription based on my current fitness level?",
+                stress: "I need guidance on stress management and autonomic regulation.",
+                sleep: "I want to optimize my sleep architecture and circadian rhythm."
+            };
+            
+            input.value = topics[topic];
+            input.focus();
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                // Simulate AI response
+                alert(`Dr. Chen: Thank you for your question about "${message}". In a full implementation, this would connect to an AI service to provide personalized medical guidance based on your recovery data and health profile.`);
+                input.value = '';
+            }
+        }
+    </script>
+</body>
+</html>

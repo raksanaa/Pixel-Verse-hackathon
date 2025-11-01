@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recovery Navigator - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .user-info h2 {
+            font-size: 1.5rem;
+        }
+
+        .user-info p {
+            color: #888;
+        }
+
+        .recovery-dial {
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+        }
+
+        .dial {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #FF4757, #FFB800, #0066FF, #00D4AA);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: rotate 8s linear infinite;
+        }
+
+        .dial-inner {
+            width: 120px;
+            height: 120px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00D4AA;
+        }
+
+        .status {
+            color: #00D4AA;
+            font-weight: 600;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .recommendation {
+            background: rgba(0, 212, 170, 0.1);
+            border: 1px solid #00D4AA;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .factors {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .factor {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid #333;
+        }
+
+        .factor-icon {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .factor-name {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .factor-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #00D4AA;
+        }
+
+        .voice-coach {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid #333;
+        }
+
+        .coach-message {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid #8B5CF6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+
+        .voice-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="user-info">
+                <h2>Good morning, Alex!</h2>
+                <p id="date"></p>
+            </div>
+            <div style="font-size: 2rem;">👤</div>
+        </div>
+
+        <div class="recovery-dial">
+            <div class="dial">
+                <div class="dial-inner">
+                    <div class="score" id="score">85</div>
+                    <div class="status">Optimal</div>
+                </div>
+            </div>
+            <p style="color: #888;">Recovery Status</p>
+        </div>
+
+        <div class="recommendation">
+            <h3 style="color: #00D4AA; margin-bottom: 10px;">🎯 Today's Recommendation</h3>
+            <p>Perfect day for a moderate intensity workout! Your recovery metrics show optimal readiness.</p>
+        </div>
+
+        <div class="factors">
+            <div class="factor">
+                <div class="factor-icon">😴</div>
+                <div class="factor-name">Sleep Quality</div>
+                <div class="factor-value">92%</div>
+            </div>
+            <div class="factor">
+                <div class="factor-icon">❤️</div>
+                <div class="factor-name">HRV</div>
+                <div class="factor-value">78ms</div>
+            </div>
+            <div class="factor">
+                <div class="factor-icon">💪</div>
+                <div class="factor-name">Muscle Strain</div>
+                <div class="factor-value">Low</div>
+            </div>
+            <div class="factor">
+                <div class="factor-icon">🧠</div>
+                <div class="factor-name">Stress Level</div>
+                <div class="factor-value">Minimal</div>
+            </div>
+        </div>
+
+        <div class="voice-coach">
+            <h3 style="margin-bottom: 15px;">🤖 AI Recovery Coach</h3>
+            <div class="coach-message" id="message">
+                Hi Alex! Your recovery looks excellent today. Ready for a challenging workout?
+            </div>
+            <button class="voice-button" onclick="askCoach()">
+                🎤 Ask Your Coach
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('date').textContent = new Date().toLocaleDateString();
+        
+        const messages = [
+            "Your sleep quality is excellent! Perfect for muscle recovery.",
+            "I recommend a 45-minute moderate intensity workout today.",
+            "Your HRV is in the optimal range. Great cardiovascular health!",
+            "Low stress levels mean you can push harder today!",
+            "Remember to stay hydrated during your workout!"
+        ];
+        
+        function askCoach() {
+            const message = messages[Math.floor(Math.random() * messages.length)];
+            document.getElementById('message').textContent = message;
+        }
+        
+        setInterval(() => {
+            const score = document.getElementById('score');
+            const current = parseInt(score.textContent);
+            const newScore = Math.max(75, Math.min(95, current + (Math.random() - 0.5) * 4));
+            score.textContent = Math.round(newScore);
+        }, 5000);
+    </script>
+</body>
+</html>
