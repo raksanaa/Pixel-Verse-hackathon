@@ -1,4 +1,4 @@
-# Recovery Navigator 🏃‍♂️💪
+<img width="1903" height="909" alt="Screenshot (86)" src="https://github.com/user-attachments/assets/2b1d6518-59a4-43fc-9c68-2cb64fc64c93" /># Recovery Navigator 🏃‍♂️💪
 
 ## AI-Powered Fitness Recovery Companion
 
@@ -276,6 +276,49 @@ npx serve -s build
 
 ---
 
+
 **Built with ❤️ for the Health & MedTech Competition**
 
 *Empowering smarter recovery decisions through AI innovation*
+<img width="1903" height="909" alt="Screenshot (86)" src="https://github.com/user-attachments/assets/035292cf-33c7-42d0-b258-bdae717f016d" />
+and i have also attached a vdieo  about this 
+<img width="1875" height="923" alt="image" src="https://github.com/user-attachments/assets/a58f25f4-be0b-4598-8913-cc5ce9017840" />
+<img width="1814" height="666" alt="image" src="https://github.com/user-attachments/assets/19d63c37-2e6a-453c-a187-372b4ea44ea3" />
+<img width="1498" height="799" alt="image" src="https://github.com/user-attachments/assets/4f3e45bf-048d-4828-8524-8b7f35777182" />
+<img width="587" height="869" alt="image" src="https://github.com/user-attachments/assets/4c5b22cc-ba36-4f93-8310-b907e6fa93ee" />
+<img width="768" height="741" alt="image" src="https://github.com/user-attachments/assets/bfb0319c-93ad-455e-8a57-e58afa9d79c8" />
+<img width="1584" height="828" alt="image" src="https://github.com/user-attachments/assets/c6e01090-e638-47b3-9478-65043ac0ce2d" />
+<img width="428" height="773" alt="image" src="https://github.com/user-attachments/assets/1b14c59b-6248-41b7-b880-e7b1da04149e" />
+<img width="792" height="853" alt="image" src="https://github.com/user-attachments/assets/727d2d74-d5c4-499a-87a6-318de00f8e7f" />
+<img width="924" height="871" alt="image" src="https://github.com/user-attachments/assets/9ca296e0-0c3e-45b1-b44c-b704ff7a9236" />
+<img width="638" height="825" alt="image" src="https://github.com/user-attachments/assets/b17e48b9-c7a3-4092-882f-74adcc7ca6c0" />
+<img width="638" height="809" alt="image" src="https://github.com/user-attachments/assets/88f1146a-e5a8-4109-a086-74b86f795665" />
+<img width="622" height="569" alt="image" src="https://github.com/user-attachments/assets/0337b0fd-c11a-42b6-a9c1-33b9e0d17313" />
+when i click conneect to my real spotify 
+<img width="1742" height="784" alt="image" src="https://github.com/user-attachments/assets/fbf969e4-4e5f-4562-bf0e-59de30213eb7" />
+<img width="817" height="810" alt="image" src="https://github.com/user-attachments/assets/dadb10d9-ad3e-421f-8ff9-0d2001c1dbd9" />
+<img width="513" height="652" alt="image" src="https://github.com/user-attachments/assets/7de66705-993f-4b01-a65e-c55493060e1d" />
+<img width="459" height="346" alt="image" src="https://github.com/user-attachments/assets/327fdaf1-8558-4c47-9164-f93047016521" />
+<img width="665" height="627" alt="image" src="https://github.com/user-attachments/assets/723223a4-52f5-4db8-9e7c-d9e4ff6926c0" />
+<img width="533" height="772" alt="image" src="https://github.com/user-attachments/assets/fd5a4b26-bca7-4609-b045-feda395f2b46" />
+<img width="1535" height="880" alt="image" src="https://github.com/user-attachments/assets/0d9710ed-7a1a-4078-b634-2fa2dda34802" />
+<img width="570" height="709" alt="image" src="https://github.com/user-attachments/assets/ac661e7a-452f-4f42-8907-5bce0efd6e96" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
