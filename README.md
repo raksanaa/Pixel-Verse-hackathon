@@ -303,6 +303,7 @@ when i click conneect to my real spotify
 <img width="533" height="772" alt="image" src="https://github.com/user-attachments/assets/fd5a4b26-bca7-4609-b045-feda395f2b46" />
 <img width="1535" height="880" alt="image" src="https://github.com/user-attachments/assets/0d9710ed-7a1a-4078-b634-2fa2dda34802" />
 <img width="570" height="709" alt="image" src="https://github.com/user-attachments/assets/ac661e7a-452f-4f42-8907-5bce0efd6e96" />
+<img width="1558" height="902" alt="image" src="https://github.com/user-attachments/assets/c4327515-0347-4435-bcdb-3e5fda46132b" />
 
 
 
